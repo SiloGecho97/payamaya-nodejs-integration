@@ -134,23 +134,23 @@ const webhook_reg = {
   callbackUrl: callbackUrl,
 };
 
-// axios
-//   .get(" https://pg-sandbox.paymaya.com/payments/v1/webhooks", {
-//     headers: headerSecret,
-//   })
-//   .then((data) => {
-//     console.log("data", data);
-//   })
-//   .catch((err) => console.log("err", err));
+axios
+  .get(" https://pg-sandbox.paymaya.com/payments/v1/webhooks", {
+    headers: headerSecret,
+  })
+  .then((data) => {
+    console.log("data", data);
+  })
+  .catch((err) => console.log("err", err));
 
-// axios
-//   .post("https://pg-sandbox.paymaya.com/checkout/v1/webhooks", webhook_reg, {
-//     headers: headerSecret,
-//   })
-//   .then((data) => {
-//     console.log("data", data.data);
-//   })
-//   .catch((err) => console.log("err", err));
+axios
+  .post("https://pg-sandbox.paymaya.com/checkout/v1/webhooks", webhook_reg, {
+    headers: headerSecret,
+  })
+  .then((data) => {
+    console.log("data", data.data);
+  })
+  .catch((err) => console.log("err", err));
 
 const webhokId = "33375ea6-617d-49d3-bf22-afca3c31ab28";
 axios
