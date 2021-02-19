@@ -130,22 +130,12 @@ let callbackUrl =
   "http://ec2-54-202-232-199.us-west-2.compute.amazonaws.com/api/payment/endpoint";
 
 const webhook_reg = {
-  name: "CHECKOUT_FAILURE",
+  name: "CHECKOUT_DROPOUT",
   callbackUrl: callbackUrl,
 };
 
-axios
-  .get(" https://pg-sandbox.paymaya.com/payments/v1/webhooks", {
-    headers: headerSecret,
-  })
-  .then((data) => {
-    console.log("data", data);
-  })
-  .catch((err) => console.log("err", err));
-
-// const webhokId = "b22249c7-2276-492f-a185-c922f7d4fd85";
 // axios
-//   .delete(`https://pg-sandbox.paymaya.com/checkout/v1/webhooks/${webhokId}`, {
+//   .get(" https://pg-sandbox.paymaya.com/payments/v1/webhooks", {
 //     headers: headerSecret,
 //   })
 //   .then((data) => {
@@ -161,3 +151,13 @@ axios
 //     console.log("data", data.data);
 //   })
 //   .catch((err) => console.log("err", err));
+
+const webhokId = "33375ea6-617d-49d3-bf22-afca3c31ab28";
+axios
+  .delete(`https://pg-sandbox.paymaya.com/checkout/v1/webhooks/${webhokId}`, {
+    headers: headerSecret,
+  })
+  .then((data) => {
+    console.log("data", data);
+  })
+  .catch((err) => console.log("err", err));
