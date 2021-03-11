@@ -22,44 +22,21 @@ const obj = {
     details: {
       discount: 0,
       serviceCharge: 0,
-      shippingFee: 0,
       tax: 0,
       subtotal: 100,
     },
   },
   buyer: {
     firstName: "Silas",
-    middleName: "Paul",
     lastName: "Getachew",
-    birthday: "1995-10-24",
     customerSince: "1995-10-24",
-    sex: "M",
+    userId: "sDK1Slk012nh123os",
+    email: "silogecho@gmail.com",
     contact: {
       phone: "+639181008888",
       email: "merchant@merchantsite.com",
     },
-    shippingAddress: {
-      firstName: "John",
-      middleName: "Paul",
-      lastName: "Doe",
-      phone: "+639181008888",
-      email: "merchant@merchantsite.com",
-      line1: "6F Launchpad",
-      line2: "Reliance Street",
-      city: "Mandaluyong City",
-      state: "Metro Manila",
-      zipCode: "1552",
-      countryCode: "PH",
-      shippingType: "ST", // ST - for standard, SD - for same day
-    },
-    billingAddress: {
-      line1: "6F Launchpad",
-      line2: "Reliance Street",
-      city: "Mandaluyong City",
-      state: "Metro Manila",
-      zipCode: "1552",
-      countryCode: "PH",
-    },
+
   },
   items: [
     {
@@ -69,13 +46,6 @@ const obj = {
       description: "CV Purchase",
       amount: {
         value: 100,
-        details: {
-          discount: 0,
-          serviceCharge: 0,
-          shippingFee: 0,
-          tax: 0,
-          subtotal: 100,
-        },
       },
       totalAmount: {
         value: 100,
@@ -126,38 +96,76 @@ const headerSecret = {
   "Content-Type": "application/json",
   Authorization: "Basic  " + secretKey,
 };
-let callbackUrl =
-  "http://ec2-54-202-232-199.us-west-2.compute.amazonaws.com/api/payment/endpoint";
 
-const webhook_reg = {
-  name: "CHECKOUT_DROPOUT",
-  callbackUrl: callbackUrl,
-};
+function startPayment(body) {
+  let publicKey = Buffer.from(apiKey).toString("base64");
+  const headerPublic = {
+    "Content-Type": "application/json",
+    "Authorization": "Basic " + publicKey,
+  };
+  return axios.post(
+    `https://pg-sandbox.paymaya.com/checkout/v1/checkouts`,
+    body,
+    { headers: headerPublic }
+  ).catch(err => err)
+}
 
-axios
-  .get(" https://pg-sandbox.paymaya.com/payments/v1/webhooks", {
-    headers: headerSecret,
-  })
-  .then((data) => {
-    console.log("data", data);
-  })
-  .catch((err) => console.log("err", err));
 
-axios
-  .post("https://pg-sandbox.paymaya.com/checkout/v1/webhooks", webhook_reg, {
-    headers: headerSecret,
-  })
-  .then((data) => {
-    console.log("data", data.data);
-  })
-  .catch((err) => console.log("err", err));
+startPayment(obj).then(data => {
+  console.log('data', data.data)
+  return true;
+}).then(data => console.log('data', data)).catch(err => console.log('err', err))
 
-const webhokId = "33375ea6-617d-49d3-bf22-afca3c31ab28";
-axios
-  .delete(`https://pg-sandbox.paymaya.com/checkout/v1/webhooks/${webhokId}`, {
-    headers: headerSecret,
-  })
-  .then((data) => {
-    console.log("data", data);
-  })
-  .catch((err) => console.log("err", err));
+function getPayments(checkoutId) {
+  let secretKey = Buffer.from(sKey).toString("base64");
+  const headerSecret = {
+    "Content-Type": "application/json",
+    Authorization: "Basic " + secretKey,
+  };
+  return axios.get(
+    `https://pg-sandbox.paymaya.com/checkout/v1/checkouts/${checkoutId}`,
+    {
+      header: {
+        headerSecret,
+      },
+    }
+  );
+}
+
+function weebhook() {
+  let callbackUrl =
+    "http://ec2-54-202-232-199.us-west-2.compute.amazonaws.com/api/payment/endpoint";
+
+  const webhook_reg = {
+    name: "CHECKOUT_DROPOUT",
+    callbackUrl: callbackUrl,
+  };
+
+  axios
+    .get(" https://pg-sandbox.paymaya.com/payments/v1/webhooks", {
+      headers: headerSecret,
+    })
+    .then((data) => {
+      console.log("data", data);
+    })
+    .catch((err) => console.log("err", err));
+
+  axios
+    .post("https://pg-sandbox.paymaya.com/checkout/v1/webhooks", webhook_reg, {
+      headers: headerSecret,
+    })
+    .then((data) => {
+      console.log("data", data.data);
+    })
+    .catch((err) => console.log("err", err));
+
+  const webhokId = "33375ea6-617d-49d3-bf22-afca3c31ab28";
+  axios
+    .delete(`https://pg-sandbox.paymaya.com/checkout/v1/webhooks/${webhokId}`, {
+      headers: headerSecret,
+    })
+    .then((data) => {
+      console.log("data", data);
+    })
+    .catch((err) => console.log("err", err));
+}
